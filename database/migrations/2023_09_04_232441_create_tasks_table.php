@@ -10,9 +10,9 @@ return new class extends Migration {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->integer('due_date')->nullable();
+            $table->date('due_date')->nullable();
             $table->longText('description')->nullable();
-            $table->string('status')->nullable();
+            $table->string('status')->default(\App\Enum\TaskStatus::PROCESSING->value);
 
             /*relationship With User The User Has MAny TAsks*/
             $table->foreignId('user_id')->constrained();
