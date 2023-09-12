@@ -13,15 +13,16 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Auth::routes();
 
 
 Route::get('/', function () {
-    return view('home');
+    return view('welcome');
 });
 
 Route::middleware('auth')->group( function (){
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
 
     Route::resource('tasks', TaskController::class)->names('tasks');
     Route::get('task/status/{task}',[TaskController::class, 'status'])->name('tasks.status');

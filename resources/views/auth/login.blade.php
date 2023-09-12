@@ -71,7 +71,7 @@
                         @endif
 
                             <a href="{{route('register')}}" class="btn btn-link">Register a new membership</a>
-
+                            <p>admin@admin.com ,pass/123456789</p>
                         <!-- /.col -->
                         <div class="col-4">
                             <button type="submit" class="btn btn-primary btn-block">
