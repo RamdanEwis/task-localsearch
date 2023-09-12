@@ -22,10 +22,9 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        $user = $this->user();
-        $tasks= Cache::remember($request->fullUrl(),10*60,function () use ($request,$user){
+        $tasks= Cache::remember($request->fullUrl(),10*60,function () use ($request){
             $query = Task::when($this->user()->type === UserType::USER->value, function ($query) use ($user) {
-                return $query->where('user_id', $user->id);
+                return $query->where('user_id', Auth::user()->>id);
             });
             return $query->paginate(12);
         });
@@ -46,7 +45,7 @@ class TaskController extends Controller
     public function store(StoreRequest $request)
     {
        $tasks = Task::create(array_merge($request->validated(),[
-           'user_id' => auth()->user()->id
+           'user_id' => Auth::user()->id
        ]));
         return redirect()->route('tasks.index');
     }
@@ -72,7 +71,7 @@ class TaskController extends Controller
      */
     public function update(UpdateRequest $request, Task $task)
     {
-        if ($this->user()->type == UserType::USER->value && $this->user()->id != $task->user_id ){
+        if (Auth::user()->type == UserType::USER->value && Auth::user()->id != $task->user_id ){
             abort(403);
         }
         $task->update($request->validated());
@@ -92,16 +91,12 @@ class TaskController extends Controller
      */
     public function destroy(Task $task )
     {
-        if ($this->user()->type == UserType::SUPER_ADMIN->value){
+        if (Auth::user()->type == UserType::SUPER_ADMIN->value){
             $task->delete();
             return redirect()->route('tasks.index')->with('success');
         }
         abort(403);
     }
 
-    public function user(  )
-    {
-    return Auth::user();
-    }
 
 }
